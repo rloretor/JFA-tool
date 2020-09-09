@@ -163,7 +163,7 @@ namespace JFA.scripts.editor
 
             if (File.Exists(path))
             {
-                var bytes = System.IO.File.ReadAllBytes(Path.Combine(JFAConfigParams.SavePath, path));
+                var bytes = File.ReadAllBytes(Path.Combine(JFAConfigParams.SavePath, path));
                 tex = new Texture2D(1, 1);
                 tex.LoadImage(bytes);
                 loadedTextures.Add(path, tex);
@@ -182,8 +182,8 @@ namespace JFA.scripts.editor
                 hideFlags = HideFlags.HideAndDontSave,
                 wrapMode = TextureWrapMode.Clamp
             };
-
-            Color[] colors = new Color [Seed.width * Seed.height];
+            int total = Seed.width * Seed.height;
+            Color[] colors = new Color [total];
             for (var index = 0;
                 index < colors.Length;
                 index++)
@@ -200,7 +200,7 @@ namespace JFA.scripts.editor
                 randPix.x = Random.Range(0, Seed.height);
                 randPix.y = Random.Range(0, Seed.width);
                 int pixi = randPix.x * Seed.width + randPix.y;
-                colors[pixi] = new Color((float) randPix.x / Seed.height, (float) randPix.y / Seed.width, 0, 0);
+                colors[pixi] = new Color((float) randPix.x / Seed.height, (float) randPix.y / Seed.width, (float) i / seedCount, 0);
             }
 
             Seed.SetPixels(colors);
