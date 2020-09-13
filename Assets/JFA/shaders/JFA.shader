@@ -54,13 +54,13 @@
                 float2 bestpos = pos;
                 float dist =0;
                 float bestId=0;
-                
+
                 for (float y = -1; y <= 1; y+=1) {
                      for (float x = -1; x <= 1; x+=1) {
                         float2 sampleCoord = i.uv + float2(x,y)*step ;
                         float3 sampleData = tex2Dlod(_MainTex,float4(sampleCoord,0,0)).xyz;
                         dist = distance(sampleData.xy,i.uv);
-                        if((sampleData.x!=0 || sampleData.y!=0) && dist<minDist ){
+                        if((sampleData.x !=0. | sampleData.y !=0. ) && dist<=minDist ){
                             minDist = dist;
                             bestpos = sampleData.xy;
                             bestId = sampleData.z;

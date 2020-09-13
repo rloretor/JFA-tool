@@ -43,8 +43,10 @@ public class JumpFloodAlgorithmBase<T>
         {
             Pass(passNumber, source, dest);
             (source, dest) = (dest, source);
+            Debug.Log("swap " + passNumber);
         }
 
+        RenderTexture.active = null;
         source.Release();
         dest.Release();
     }
@@ -77,7 +79,7 @@ public class JumpFloodAlgorithmBase<T>
         }
         else
         {
-            if (passes >= maxPasses)
+            if (passes > maxPasses)
             {
                 Debug.LogWarning($"The algorithm needs to run with {passes}, not using {maxPasses}");
             }

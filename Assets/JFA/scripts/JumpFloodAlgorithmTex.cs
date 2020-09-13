@@ -33,12 +33,18 @@ public class JumpFloodAlgorithmTex : JumpFloodAlgorithmBase<Texture2D>
     private Texture2D GetTexture(int passNumber, RenderTexture source)
     {
         var passn = (int) Mathf.Clamp(passNumber, 0.0f, this.passes);
-        var step = Mathf.FloorToInt(Mathf.Pow(2.0f, (passes - passn)));
         var Height = seedTexture.height;
         var Width = seedTexture.width;
-        var processTexture = new Texture2D(Width, Height, TextureFormat.RGB24, false) {name = string.Format(SaveFileName, passNumber + 1 /*, step*/)};
+        var processTexture = new Texture2D(Width, Height, TextureFormat.RGBA32, false, true)
+        {
+            name = string.Format(SaveFileName, passNumber + 1 /*, step*/),
+            alphaIsTransparency = true,
+            anisoLevel = 0,
+            requestedMipmapLevel = 0
+        };
         processTexture.ReadPixels(new Rect(0, 0, source.width, source.height), 0, 0);
         processTexture.Apply();
+        processTexture.filterMode = FilterMode.Point;
         return processTexture;
     }
 
