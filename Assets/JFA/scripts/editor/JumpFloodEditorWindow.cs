@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.XR.WSA.Input;
 using Random = UnityEngine.Random;
 
 namespace JFA.scripts.editor
@@ -50,7 +48,7 @@ namespace JFA.scripts.editor
             InitJFAConfigParams();
             int textures = Directory.GetFiles(JFAConfigParams.SavePath, "*.png", SearchOption.AllDirectories).Length;
             TryDrawJFAComputeButton(textures != 0);
-            TryDisplayArea(textures);
+            TryDisplayInteractiveArea(textures);
         }
 
         private float posx;
@@ -58,7 +56,7 @@ namespace JFA.scripts.editor
         private float scale;
         private int debugType;
 
-        private void TryDisplayArea(int texturesAmount)
+        private void TryDisplayInteractiveArea(int texturesAmount)
         {
             if (texturesAmount == 0) return;
             if (UDFMaterial == null)
@@ -84,16 +82,33 @@ namespace JFA.scripts.editor
             if (tex != null)
             {
                 var AR = (float) tex.width / tex.height;
-                var pixelRect = GUILayoutUtility.GetAspectRect(AR);
+                Rect pixelRect = GUILayoutUtility.GetAspectRect(AR);
                 Rect r = new Rect();
-                r.height = Mathf.Abs(position.yMax - pixelRect.position.y) * 0.9f;
+                r.height = Mathf.Abs(position.yMax - pixelRect.position.y) * 0.8f;
                 r.width = r.height * AR;
-                r.position = pixelRect.position + Vector2.right * (position.width / 2.0f - r.width / 2.0f);
+                r.position = pixelRect.position + Vector2.right * (position.width / 2.0f - r.width / 2.0f) + Vector2.up* Mathf.Abs(position.yMax - pixelRect.position.y)*0.01f;
                 EditorGUILayout.BeginVertical();
 
                 UDFMaterial.SetVector("translate", new Vector4(posx, posy, scale, 0));
                 UDFMaterial.SetInt("analyze", displayUDF ? 1 : 0);
                 EditorGUI.DrawPreviewTexture(r, tex, UDFMaterial, ScaleMode.ScaleAndCrop, 0.0f, 0);
+                r.position = r.position + Vector2.up *r.height*1.025f;
+                r.height = Mathf.Abs(r.position.y - position.yMax) * 0.2f;
+                if (GUI.Button(r, "Save texture"))
+                {
+                   var temp = RenderTexture.GetTemporary(tex.width,tex.height,0);
+                    Texture2D tex2 = new Texture2D(tex.width, tex.height) {
+                            hideFlags = HideFlags.HideAndDontSave
+                    };
+                    
+                    Graphics.Blit(tex, temp,UDFMaterial,0);
+                    RenderTexture.active = temp;
+                    tex2.ReadPixels(new Rect(0, 0, temp.width, temp.height), 0, 0);
+                    tex2.Apply();
+                    tex2.SaveTextureAsPng($"{Application.dataPath}/JFA/");
+                    RenderTexture.active = null;
+                    temp.Release();
+                }
 
                 EditorGUILayout.EndVertical();
             }
@@ -111,9 +126,9 @@ namespace JFA.scripts.editor
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("(displacement X,displacement Y)");
-            posx = EditorGUILayout.Slider(posx, -0.5f, 0.5f);
-            EditorGUILayout.Separator();
-            posy = EditorGUILayout.Slider(posy, -0.5f, 0.5f);
+            posx = EditorGUILayout.Slider(posx, -1f, 1f);
+            EditorGUILayout.Separator();       
+            posy = EditorGUILayout.Slider(posy, -1f, 1f);
             EditorGUILayout.EndHorizontal();
 
             DrawUILine(Color.gray, 1, 15);

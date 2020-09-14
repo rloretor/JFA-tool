@@ -63,13 +63,13 @@
 
             float3 BoxFilter(float2 uv,float2 seedcoords){
               float3 acc =0;
-                for(int i = -4; i <= 4; i++){
-                     for(int j = -4; j <= 4; j++){
+                for(int i = -5; i <= 5; i++){
+                     for(int j = -5; j <= 5; j++){
                        float2 uvtemp = uv + float2(i, j )*_MainTex_TexelSize;
      	             	acc += distance(seedcoords,uvtemp);
                      }
                 }
-                return acc/(9*9);
+                return acc/(11*11);
             }
  
             float3 frag (v2f i) : SV_Target
@@ -80,13 +80,13 @@
               if(showDistance){
                float d= distance(sampleData.xy,uvFocus);
                  d =(almostIdentity(d,0.5,0));
-                 return (1-d*1001);
+                 return exp (-d*10);
 
               }
               if(filterDistance){
                  float d= BoxFilter(uvFocus,sampleData.xy);
-                  d =(almostIdentity(d,0.3,0)*3);
-                 return pow(1-d,4);
+                  d =(almostIdentity(d,0.5,0));
+                 return exp(-d*10);
               }
               return  sampleData.z;
             }
