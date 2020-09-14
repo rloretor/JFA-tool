@@ -72,7 +72,7 @@
                 return acc/(11*11);
             }
  
-            float3 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
               float2 uvFocus = ((i.uv*2-1))*translate.z+(translate.xy);
               uvFocus =  (uvFocus*0.5+0.5);
@@ -80,15 +80,15 @@
               if(showDistance){
                float d= distance(sampleData.xy,uvFocus);
                  d =(almostIdentity(d,0.5,0));
-                 return exp (-d*10);
+                 return float4(float3(1,1,1)*exp (-d*10),1);
 
               }
               if(filterDistance){
                  float d= BoxFilter(uvFocus,sampleData.xy);
                   d =(almostIdentity(d,0.5,0));
-                 return exp(-d*10);
+                 return float4(float3(1,1,1)*exp (-d*10),1);
               }
-              return  sampleData.z;
+              return  float4(sampleData.zzz,1);
             }
             ENDCG
         }

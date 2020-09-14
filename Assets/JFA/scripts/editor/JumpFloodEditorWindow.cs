@@ -84,7 +84,7 @@ namespace JFA.scripts.editor
                 var AR = (float) tex.width / tex.height;
                 Rect pixelRect = GUILayoutUtility.GetAspectRect(AR);
                 Rect r = new Rect();
-                r.height = Mathf.Abs(position.yMax - pixelRect.position.y) * 0.8f;
+                r.height = Mathf.Abs(position.yMax - pixelRect.position.y) * 0.75f;
                 r.width = r.height * AR;
                 r.position = pixelRect.position + Vector2.right * (position.width / 2.0f - r.width / 2.0f) + Vector2.up* Mathf.Abs(position.yMax - pixelRect.position.y)*0.01f;
                 EditorGUILayout.BeginVertical();
@@ -92,7 +92,7 @@ namespace JFA.scripts.editor
                 UDFMaterial.SetVector("translate", new Vector4(posx, posy, scale, 0));
                 UDFMaterial.SetInt("analyze", displayUDF ? 1 : 0);
                 EditorGUI.DrawPreviewTexture(r, tex, UDFMaterial, ScaleMode.ScaleAndCrop, 0.0f, 0);
-                r.position = r.position + Vector2.up *r.height*1.025f;
+                r.position = r.position + Vector2.up *r.height;
                 r.height = Mathf.Abs(r.position.y - position.yMax) * 0.2f;
                 if (GUI.Button(r, "Save texture"))
                 {
@@ -387,21 +387,6 @@ namespace JFA.scripts.editor
 
             Seed.SetPixels(pixelBuffer);
             Seed.Apply();
-        }
-
-        float hash13(Vector3 p3)
-        {
-            p3 = new Vector3(
-                (p3.x * .1031f) % 1.0f,
-                (p3.y * .1031f) % 1.0f,
-                (p3.z * .1031f) % 1.0f);
-            p3 += Vector3.one * Vector3.Dot(p3,
-                new Vector3(
-                    p3.y + 33.33f,
-                    p3.z + 33.33f,
-                    p3.x + 33.33f
-                ));
-            return ((p3.x + p3.y) * p3.z) % 1.0f;
         }
 
         private void FillSeedTexture(Texture2D Seed)
