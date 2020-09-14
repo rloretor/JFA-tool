@@ -92,7 +92,7 @@ namespace JFA.scripts.editor
                 UDFMaterial.SetVector("translate", new Vector4(posx, posy, scale, 0));
                 UDFMaterial.SetInt("analyze", displayUDF ? 1 : 0);
                 EditorGUI.DrawPreviewTexture(r, tex, UDFMaterial, ScaleMode.ScaleAndCrop, 0.0f, 0);
-                r.position = r.position + Vector2.up *r.height;
+                r.position = r.position + Vector2.up *(r.height+5f);
                 r.height = Mathf.Abs(r.position.y - position.yMax) * 0.2f;
                 if (GUI.Button(r, "Save texture"))
                 {
