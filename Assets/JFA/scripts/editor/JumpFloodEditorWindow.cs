@@ -65,7 +65,7 @@ namespace JFA.scripts.editor
             }
 
             DrawTextureHandlers(texturesAmount);
-            string[] DebugTypes = new[] {"showDistance", "filterDistance", "show cell"};
+            string[] DebugTypes = new[] { "show cell", "showDistance", "filterDistance", "boxFilterDistance"};
             debugType = EditorGUILayout.Popup("Debug Type", debugType, DebugTypes);
             foreach (var current in DebugTypes)
             {
@@ -157,6 +157,7 @@ namespace JFA.scripts.editor
             bool usesSourceTex = sourceProperties == SourceOptions.SourceTexture && sourceTexture != null && sourceTexture.isReadable;
             if ((seedCount > 0 || usesSourceTex) && GUILayout.Button($"{(computedJFA ? "Recalculate" : "Compute")} JFA"))
             {
+                displayedTexture = 0;
                 foreach (var tex in loadedTextures)
                 {
                     DestroyImmediate(tex.Value);
@@ -203,7 +204,18 @@ namespace JFA.scripts.editor
         {
             string[] options =
             {
-                "Game Mode Display Size", (1 << 8).ToString(), (1 << 9).ToString(), (1 << 10).ToString(), (1 << 11).ToString(), (1 << 12).ToString(),
+                "Game Mode Display Size",
+                (1 << 2).ToString(),
+                (1 << 3).ToString(),
+                (1 << 4).ToString(),
+                (1 << 5).ToString(),
+                (1 << 6).ToString(),
+                (1 << 7).ToString(),
+                (1 << 8).ToString(),
+                (1 << 9).ToString(),
+                (1 << 10).ToString(),
+                (1 << 11).ToString(),
+                (1 << 12).ToString(),
             };
 
             selectedWidth = EditorGUILayout.Popup("Texture width", selectedWidth, options);
@@ -369,7 +381,7 @@ namespace JFA.scripts.editor
                 Vector2 average = colorToPositions[pair.Key].Aggregate(new Vector2(0, 0), (s, v) => s + v) / (float) colorToPositions[pair.Key].Count;
                 colorToPositions[pair.Key].Add(average);
             }
-
+            var keyslist = colorToPositions.Keys.ToList();
             for (int i = 0; i < pixelBuffer.Length; i++)
             {
                 Color c = pixelBuffer[i];
@@ -382,7 +394,7 @@ namespace JFA.scripts.editor
                 Vector2 pos = colorToPositions[pixelBuffer[i]].Last();
                 float row = (float) i / sourceTexture.width;
                 float column = i % sourceTexture.width;
-                pixelBuffer[i] = new Color((column) / sourceTexture.width, (row) / sourceTexture.height, (colorToPositions.Keys.ToList().IndexOf(pixelBuffer[i]) + 1.0f) / colorToPositions.Keys.Count, 0);
+                pixelBuffer[i] = new Color((column) / sourceTexture.width, (row) / sourceTexture.height, (keyslist.IndexOf(pixelBuffer[i]) + 1.0f) / colorToPositions.Keys.Count, 0);
             }
 
             Seed.SetPixels(pixelBuffer);
@@ -402,14 +414,14 @@ namespace JFA.scripts.editor
 
             Random.InitState(System.DateTime.Now.Second);
             for (int i = 0;
-                i <= seedCount;
+                i < seedCount;
                 i++)
             {
                 var randPix = new Vector2Int();
                 randPix.x = Random.Range(0, Seed.height);
                 randPix.y = Random.Range(0, Seed.width);
                 int pixi = randPix.x * Seed.width + randPix.y;
-                colors[pixi] = new Color((float) randPix.x / Seed.height, (float) randPix.y / Seed.width, (float) i / seedCount, 0);
+                colors[pixi] = new Color((float) randPix.x / Seed.height, (float) randPix.y / Seed.width, (float) (i+1) / seedCount, 0);
             }
 
             Seed.SetPixels(colors);

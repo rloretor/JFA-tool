@@ -36,6 +36,7 @@
             uniform float4 translate;
             uniform bool showDistance;
             uniform bool filterDistance;
+            uniform bool boxFilterDistance;
 
 
             v2f vert (appdata v)
@@ -80,15 +81,19 @@
               if(showDistance){
                float d= distance(sampleData.xy,uvFocus);
                  d =(almostIdentity(d,0.5,0));
-                 return float4(float3(1,1,1)*exp (-d*10),1);
-
+                 return ( d);
               }
-              if(filterDistance){
+			  if(filterDistance){
+               float d= distance(sampleData.xy,uvFocus);
+                 d =(almostIdentity(d,0.5,0));
+                 return (1- d);
+              }
+              if(boxFilterDistance){
                  float d= BoxFilter(uvFocus,sampleData.xy);
                   d =(almostIdentity(d,0.5,0));
                  return float4(float3(1,1,1)*exp (-d*10),1);
               }
-              return  float4(sampleData.zzz,1);
+              return  float4(hash31((sampleData.z)*1013) ,1);
             }
             ENDCG
         }
