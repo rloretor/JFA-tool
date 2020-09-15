@@ -91,7 +91,7 @@ namespace JFA.scripts.editor
 
                 UDFMaterial.SetVector("translate", new Vector4(posx, posy, scale, 0));
                 UDFMaterial.SetInt("analyze", displayUDF ? 1 : 0);
-                EditorGUI.DrawPreviewTexture(r, tex, UDFMaterial, ScaleMode.ScaleAndCrop, 0.0f, 0);
+                EditorGUI.DrawPreviewTexture(r, tex, UDFMaterial, ScaleMode.ScaleAndCrop, 0.0f);
                 r.position = r.position + Vector2.up *(r.height+5f);
                 r.height = Mathf.Abs(r.position.y - position.yMax) * 0.2f;
                 if (GUI.Button(r, "Save texture"))
@@ -158,6 +158,9 @@ namespace JFA.scripts.editor
             if ((seedCount > 0 || usesSourceTex) && GUILayout.Button($"{(computedJFA ? "Recalculate" : "Compute")} JFA"))
             {
                 displayedTexture = 0;
+                posx = posy = 0;
+                scale = 1;
+
                 foreach (var tex in loadedTextures)
                 {
                     DestroyImmediate(tex.Value);
@@ -421,7 +424,7 @@ namespace JFA.scripts.editor
                 randPix.x = Random.Range(0, Seed.height);
                 randPix.y = Random.Range(0, Seed.width);
                 int pixi = randPix.x * Seed.width + randPix.y;
-                colors[pixi] = new Color((float) randPix.x / Seed.height, (float) randPix.y / Seed.width, (float) (i+1) / seedCount, 0);
+                colors[pixi] = new Color( (float) randPix.y / Seed.width, (float)randPix.x / Seed.height,(float) (i+1) / seedCount, 0);
             }
 
             Seed.SetPixels(colors);
