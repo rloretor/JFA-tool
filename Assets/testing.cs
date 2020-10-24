@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 public class testing : MonoBehaviour
 {
     public int SeedCount = 0;
-    public JFAConfigParams ConfigParams;
+    public JFAConfig Config;
     private JumpFloodAlgorithmTex JFA_tex = null;
 
 
@@ -38,7 +38,7 @@ public class testing : MonoBehaviour
         Seed.SetPixels(colors);
         Seed.Apply(false);
 
-        JFA_tex = new JumpFloodAlgorithmTex(Seed, ConfigParams);
+        JFA_tex = new JumpFloodAlgorithmTex(Seed, Config);
 
 
         JFA_tex.Compute();

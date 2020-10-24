@@ -6,11 +6,11 @@ using Object = UnityEngine.Object;
 [Serializable]
 public class JumpFloodAlgorithmTex : JumpFloodAlgorithmBase<Texture2D>
 {
-    private string SaveFileName => JFAConfigParams.SaveFileName;
+    private string SaveFileName => JFAConfig.SaveFileName;
 
-    public static string SavePath => JFAConfigParams.SavePath;
+    public static string SavePath => JFAConfig.SavePath;
 
-    public JumpFloodAlgorithmTex(Texture2D seedTexture, JFAConfigParams configParameters) : base(seedTexture, configParameters)
+    public JumpFloodAlgorithmTex(Texture2D seedTexture, JFAConfig configParameters) : base(seedTexture, configParameters)
     {
         if (recordProcess)
         {

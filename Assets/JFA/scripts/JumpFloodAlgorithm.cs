@@ -14,7 +14,7 @@ public class JumpFloodAlgorithmBase<T>
     private int passID = Shader.PropertyToID("_pass");
     private int maxPassID = Shader.PropertyToID("_maxPasses");
     protected int passes;
-    protected JFAConfigParams config;
+    protected JFAConfig config;
     protected bool recordProcess => config.RecordProcess;
     protected bool forceMaxPasses => config.ForceMaxPasses;
     protected int maxPasses => config.MaxPasses;
@@ -22,7 +22,7 @@ public class JumpFloodAlgorithmBase<T>
 
     public int Passes => passes;
 
-    public JumpFloodAlgorithmBase(T seedTexture, JFAConfigParams configParameters)
+    public JumpFloodAlgorithmBase(T seedTexture, JFAConfig configParameters)
     {
         this.seedTexture = seedTexture;
         this.config = configParameters;

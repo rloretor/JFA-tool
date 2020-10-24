@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class JFAConfigParams : UnityEngine.Object
+public class JFAConfig : UnityEngine.Object
 {
     public static string SaveFileName = "Result_{0:00}";
     public static string SavePath => $"{Application.dataPath}/JFA/Results";
